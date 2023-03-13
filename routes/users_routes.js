@@ -1,7 +1,7 @@
-const users_controller = require('../controller/users_controller')
+const users_controller = require('../controller/users_crud_controller')
 
 function get_products_route(app){
-    app.get('/', users_controller.get_products)
+    app.get('/products', users_controller.get_products)
 }
 
 function get_product_id_route(app){
@@ -9,7 +9,7 @@ function get_product_id_route(app){
 }
 
 function post_product_route(app){
-    app.post('/', users_controller.post_product)
+    app.post('/products', users_controller.post_product)
 }
 
 function delete_product_route(app){
