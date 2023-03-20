@@ -12,6 +12,7 @@ const products_routes = require('./routes/products_routes')
 const users_routes = require('./routes/users_routes')
 const mail_rout = require('./routes/mail_rout')
 const cartItems_routes = require('./routes/cartItems_routes')
+// const schema = require('./seed/seed')
 
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ const db = new sqlite3.Database('database.db', (err) => {
     console.log('Connected to the database.');
   });
   
+// schema.seed(db)
 
 users_schema.create_users(db)
 products_schema.create_products(db)
@@ -42,7 +44,10 @@ users_routes.login_user_route(app)
 
 mail_rout.get_verify_user_route(app)
 
-cartItems_routes.post_product_to_cartItems(app)
+cartItems_routes.post_product(app)
+cartItems_routes.get_products(app)
+cartItems_routes.delete_product(app)
+cartItems_routes.patch_product(app)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
