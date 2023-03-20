@@ -11,6 +11,7 @@ const cartItems_schema = require('./models/cartItems_schema')
 const products_routes = require('./routes/products_routes')
 const users_routes = require('./routes/users_routes')
 const mail_rout = require('./routes/mail_rout')
+const cartItems_routes = require('./routes/cartItems_routes')
 
 app.use(cors());
 app.use(express.json());
@@ -40,6 +41,8 @@ users_routes.register_user_route(app)
 users_routes.login_user_route(app)
 
 mail_rout.get_verify_user_route(app)
+
+cartItems_routes.post_product_to_cartItems(app)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
