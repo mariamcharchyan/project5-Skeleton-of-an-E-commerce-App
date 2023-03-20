@@ -1,35 +1,20 @@
-const users_controller = require('../controller/users_crud_controller')
+const users_controller = require('../controller/users_controller')
 
-function get_products_route(app){
-    app.get('/products', users_controller.get_products)
+function get_users_route(app){
+    app.get('/users', users_controller.get_users)
 }
 
-function get_product_id_route(app){
-    app.get('/product/:id', users_controller.get_product_id)
+function register_user_route(app){
+    app.post('/register', users_controller.register_user)
 }
 
-function post_product_route(app){
-    app.post('/products', users_controller.post_product)
-}
-
-function delete_product_route(app){
-    app.delete('/product/delete/:id', users_controller.delete_product_id)
-}
-
-function put_product_id(app){
-    app.put('/product/update/:id', users_controller.put_product_id)
-}
-
-function patch_protuct_id(app){
-    app.patch('/product/update/:id', users_controller.patch_protuct_id)
+function login_user_route(app){
+    app.post('/login', users_controller.login_user)
 }
 
 
 module.exports = {
-    get_products_route,
-    get_product_id_route,
-    post_product_route,
-    delete_product_route,
-    put_product_id,
-    patch_protuct_id
+    get_users_route,
+    register_user_route,
+    login_user_route
 }
