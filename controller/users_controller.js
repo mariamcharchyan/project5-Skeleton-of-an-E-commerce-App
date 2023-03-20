@@ -25,31 +25,25 @@ function register_user(req, res){
     const email = req.body.email;
     const password = req.body.password;
     const hashed_password = CryptoJS.SHA256(password).toString();
-    let sql = 'INSERT INTO users (name, surname, age, gender, email, password) VALUES (?,?,?,?,?,?)';
-    db.run(sql,[name, surname, age, gender, email, hashed_password], function(err){
-        if(err){
-            res.send(JSON.stringify({status: 'Error Registering'}));
-        } else {
-            
-            let token = jwt_generate.generateAccessToken(email);
-            mailer.send_Mail(email, token)
 
-            const user_id = this.lastID;
-            create_cart_for_user(user_id,res);
-        }
-    res.send(JSON.stringify({status: 'User Created'}));
-    })
-}
-
-function create_cart_for_user(user_id, res) {
-    db.run('INSERT INTO carts (user_id) VALUES (?)', [user_id], function(err) {
+    let checkEmailSql = 'SELECT * FROM users WHERE email=?';
+    db.get(checkEmailSql, [email], function(err, data) {
         if (err) {
-            res.status(500).send('Internal server error');
-        } 
-        // else {
-        //     const cart_id = this.lastID;
-        //     res.status(201).json({ cart_id: cart_id });
-        // }
+            return res.send(JSON.stringify({status: 'Error Registering'}));
+        } else if (data) {
+            return res.send(JSON.stringify({status: 'Email already exists'}));
+        } else {
+            let insertSql = 'INSERT INTO users (name, surname, age, gender, email, password) VALUES (?,?,?,?,?,?)';
+            db.run(insertSql,[name, surname, age, gender, email, hashed_password], function(err){
+                if(err){
+                    return res.send(JSON.stringify({status: 'Error Registering'}));
+                } else {
+                    let token = jwt_generate.generateAccessToken(email);
+                    mailer.send_Mail(email, token)
+                }
+            return res.send(JSON.stringify({status: 'User Created'}));
+            })
+        }
     })
 }
 
