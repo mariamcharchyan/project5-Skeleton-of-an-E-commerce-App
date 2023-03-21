@@ -19,15 +19,15 @@ async function seed() {
             //add admin
             const passwordAdmin = "Mariam27";
             const hashedPasswordAdmin = CryptoJS.SHA256(passwordAdmin).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Mariam', 'Charchyan', 27, 'female', 'mariamMail', 1, 'admin', ?)",[hashedPasswordAdmin])
+            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Mariam', 'Charchyan', 27, 'female', 'mariam@mail.com', 1, 'admin', ?)",[hashedPasswordAdmin])
             //add user1
             const passwordUser1 = "Hasmik22";
             const hashedPasswordUser1 = CryptoJS.SHA256(passwordUser1).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Hasmik', 'Nalbandyan', 22, 'female', 'hasmikMail', 1, 'user', ?)",[hashedPasswordUser1])
+            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Hasmik', 'Nalbandyan', 22, 'female', 'hasmik@mail.com', 1, 'user', ?)",[hashedPasswordUser1])
             //add user2
             const passwordUser2 = "Narek33";
             const hashedPasswordUser2 = CryptoJS.SHA256(passwordUser2).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Narek', 'Mkrtchyan', 33, 'male', 'narekMail', 1, 'user', ?)",[hashedPasswordUser2])
+            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Narek', 'Mkrtchyan', 33, 'male', 'narek@mail.com', 1, 'user', ?)",[hashedPasswordUser2])
           
             // Create products table
             database.run('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, category TEXT, image TEXT, name TEXT, price REAL, description TEXT )');
