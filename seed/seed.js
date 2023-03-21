@@ -2,6 +2,40 @@ const sqlite3 = require('sqlite3').verbose()
 const database = new sqlite3.Database('../database.db')
 const CryptoJS = require('crypto-js')
 
+const products = [
+    { category: 'girl', image: 'https1', name: 'image1', price: 111100, description: 'description1' },
+    { category: 'boy', image: 'https2', name: 'image2', price: 11110, description: 'description2' },
+    { category: 'girl', image: 'https3', name: 'image3', price: 11110, description: 'description3' },
+    { category: 'girl', image: 'https4', name: 'image4', price: 11110, description: 'description4' },
+    { category: 'boy', image: 'https5', name: 'image5', price: 11110, description: 'description5' },
+    { category: 'boy', image: 'https6', name: 'image6', price: 11110, description: 'description6' },
+  ];
+  
+const users = [
+    {name: "Mariam", surname: "Charchyan", age: 27, gender: "female", email: "mariam@mail.com", is_verified: 1, status: "admin", password: "Mariam27"},
+    {name: "Hasmik", surname: "Nalbandyan", age: 22, gender: "female", email: "hasmik@mail.com", is_verified: 1, status: "user", password: "Hasmik22" },
+    {name: "Narek", surname: "Mkrtchyan", age: 33, gender: "male", email: "narek@mail.com", is_verified: 1, status: "user", password: "Narek33" },
+    {name: "Aram", surname: "Hayrapetyan", age: 44, gender: "male", email: "aram@mail.com", is_verified: 1, status: "user", password: "Aram33" }
+];
+
+const carts = [
+    { user_id: 2 },
+    { user_id: 3 },
+    { user_id: 4 }
+];
+
+const cartItems = [
+    { cart_id: 1, product_id: 3, quantity: 1 },
+    { cart_id: 1, product_id: 4, quantity: 3 },
+    { cart_id: 1, product_id: 1, quantity: 1 },
+    { cart_id: 2, product_id: 1, quantity: 2 },
+    { cart_id: 2, product_id: 6, quantity: 3 },
+    { cart_id: 2, product_id: 2, quantity: 1 },
+    { cart_id: 3, product_id: 5, quantity: 6 },
+    { cart_id: 3, product_id: 3, quantity: 1 },
+    { cart_id: 3, product_id: 2, quantity: 4 }
+];
+
 async function seed() {
     try {
       await new Promise((resolve, reject) => {
@@ -14,50 +48,32 @@ async function seed() {
   
             // Create users table
             database.run('CREATE TABLE IF NOT EXISTS users ( id INTEGER PRIMARY KEY, name TEXT, surname  TEXT, age  INTEGER, gender  TEXT, email TEXT, is_verified INTEGER DEFAULT 0, status TEXT DEFAULT "user", password TEXT)');
-  
-            // Seed users table
-            //add admin
-            const passwordAdmin = "Mariam27";
-            const hashedPasswordAdmin = CryptoJS.SHA256(passwordAdmin).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Mariam', 'Charchyan', 27, 'female', 'mariam@mail.com', 1, 'admin', ?)",[hashedPasswordAdmin])
-            //add user1
-            const passwordUser1 = "Hasmik22";
-            const hashedPasswordUser1 = CryptoJS.SHA256(passwordUser1).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Hasmik', 'Nalbandyan', 22, 'female', 'hasmik@mail.com', 1, 'user', ?)",[hashedPasswordUser1])
-            //add user2
-            const passwordUser2 = "Narek33";
-            const hashedPasswordUser2 = CryptoJS.SHA256(passwordUser2).toString();
-            database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES ('Narek', 'Mkrtchyan', 33, 'male', 'narek@mail.com', 1, 'user', ?)",[hashedPasswordUser2])
-          
+            users.map((user) =>{
+                const hashedPassword = CryptoJS.SHA256(user.password).toString();
+                database.run("INSERT INTO users (name, surname, age, gender, email, is_verified, status, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    [user.name, user.surname, user.age, user.gender, user.email, user.is_verified, user.status, hashedPassword]);
+            });
+            
             // Create products table
             database.run('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, category TEXT, image TEXT, name TEXT, price REAL, description TEXT )');
-  
-            // Seed products table
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('girl', 'https1', 'image1', 100, 'description1')");
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('boy', 'https2', 'image2', 200, 'description2')");
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('girl', 'https3', 'image3', 300, 'description3')");
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('girl', 'https4', 'image4', 400, 'description4')");
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('boy', 'https5', 'image5', 500, 'description5')");
-            database.run("INSERT INTO products (category, image, name, price, description) VALUES ('boy', 'https6', 'image6', 600, 'description6')");
-
+            products.map((product) =>{
+                database.run(`INSERT INTO products (category, image, name, price, description) VALUES (?, ?, ?, ?, ?)`, 
+                             [product.category, product.image, product.name, product.price, product.description]);
+            });
+ 
             // Create carts table
             database.run('CREATE TABLE IF NOT EXISTS carts (id INTEGER PRIMARY KEY, user_id INTEGER UNIQUE, FOREIGN KEY (user_id) REFERENCES users(id))');
-  
-            // Seed carts table
-            database.run("INSERT INTO carts (user_id) VALUES (2)");
-            database.run("INSERT INTO carts (user_id) VALUES (3)");
-  
+            carts.map(cart => {
+                database.run("INSERT INTO carts (user_id) VALUES (?)", [cart.user_id]);
+            });
+
             // Create cartItems table
             database.run('CREATE TABLE IF NOT EXISTS cartItems (id INTEGER PRIMARY KEY,cart_id INTEGER, product_id INTEGER, quantity INTEGER, FOREIGN KEY (cart_id) REFERENCES carts(id), FOREIGN KEY (product_id) REFERENCES products(id))');
-  
-            // Seed cartItems table
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (1, 3, 1)");
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (1, 4, 3)");
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (1, 1, 1)");
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (2, 1, 2)");
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (2, 6, 3)");
-            database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (2, 2, 1)");
-            
+            cartItems.map(item => {
+                database.run("INSERT INTO cartItems (cart_id, product_id, quantity) VALUES (?, ?, ?)",
+                [item.cart_id, item.product_id, item.quantity]);
+            });
+
             resolve();
         });
       });
@@ -70,6 +86,6 @@ async function seed() {
     //  finally {
     //   database.close();
     // }
-  }
+}
   
-  seed();
+seed();
