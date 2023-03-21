@@ -18,7 +18,23 @@ function checkStatusAdmin(req,res,next){
     })
 }
 
-module.exports = {checkStatusAdmin};
+function checkStatusUser(req,res,next){
+  const token=req.headers.authorization
+  const decoded=jwt.decode(token)
+  const email = decoded.email
+  db.get('SELECT * FROM users WHERE email = ?',[email], (err, data) => {
+    console.log(data);
+    if(data.status != "user") {
+      return res.sendStatus(403)
+      }
+      next()
+  })
+}
+
+module.exports = {
+  checkStatusAdmin,
+  checkStatusUser
+};
 
 
 

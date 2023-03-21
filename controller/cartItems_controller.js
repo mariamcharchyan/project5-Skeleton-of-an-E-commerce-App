@@ -48,13 +48,13 @@ function add_product(req, res){
 function delete_product(req, res) {
   const cart_id = req.body.cart_id;
   const product_id = req.body.product_id;
-  db.run('DELETE FROM cartItems WHERE cart_id = ? || product_id = ?', [cart_id, product_id ], err => {
+  db.run('DELETE FROM cartItems WHERE (cart_id = ? AND product_id = ?)', [cart_id, product_id ], err => {
     if (err) {
       console.error(err.message);
-      res.status(500).send('Internal server error');
-      return;
+      return res.status(500).send('Internal server error');
+      
     }
-    res.send(`Product with id=${product_id} was deleted from cart with id=${cart_id}`);
+    return res.send(`Product with id=${product_id} was deleted from cart with id=${cart_id}`);
   });
  
 }
