@@ -9,7 +9,7 @@ const products = [
     { category: 'girl', image: 'https4', name: 'image4', price: 11110, description: 'description4' },
     { category: 'boy', image: 'https5', name: 'image5', price: 11110, description: 'description5' },
     { category: 'boy', image: 'https6', name: 'image6', price: 11110, description: 'description6' },
-  ];
+];
   
 const users = [
     {name: "Mariam", surname: "Charchyan", age: 27, gender: "female", email: "mariam@mail.com", is_verified: 1, status: "admin", password: "Mariam27"},

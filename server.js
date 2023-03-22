@@ -19,7 +19,7 @@ app.use(express.json());
 
 const db = new sqlite3.Database('database.db', (err) => {
     if (err) {
-      console.log("?sth rong wrong");
+      console.log('there is an error');
     }
     console.log('Connected to the database.');
   });
